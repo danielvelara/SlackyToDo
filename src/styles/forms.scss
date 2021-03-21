@@ -1,0 +1,40 @@
+$mainColor: #000000;
+$objectColor: #434343;
+$backgroundColor: #262626;
+$borderColor: #262626;
+$secondaryColor: #0078ff;
+$textColor: white;
+
+.forceCentered{
+  background-color: $backgroundColor;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .card{
+    background-color: $objectColor !important;
+    border-radius: 15px;
+    form{
+      padding-bottom: 10px;
+      .textBox{
+        background-color: $backgroundColor;
+        border: none;
+        color: $textColor;
+        border-radius: 5000px;
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .birthBox{
+        background-color: $backgroundColor;
+        border: none;
+        color: $textColor;
+        text-align: center;
+        width: 100%;
+        border-radius: 5000px;
+      }
+      .btn{
+        margin-top: 8px;
+      }
+    }
+  }
+}
