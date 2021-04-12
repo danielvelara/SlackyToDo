@@ -6,7 +6,7 @@ class IDTestCases(unittest.TestCase):
         self.email = "emilio@tec.mx"
 
     def test_A_GetUserID(self):
-        assert getUser_ID(self.email) != None, "K41ev1j8YkSO6zUKWXObtuvK2HZ2"
+        assert getUser_ID(self.email) == "K41ev1j8YkSO6zUKWXObtuvK2HZ2", "User ID is wrong"
         
     def test_B_ShowToDos(self):
         assert showToDos(self.email) != [], "User shouldn't have empy list of todo's"
