@@ -35,16 +35,22 @@ signupForm.addEventListener('submit', e => {
             Password: password
         }).then(() => {
             // console.log('success');
-            location = "login.html";
+            auth.signInWithEmailAndPassword(email, password).then(() => {
+                console.log('login success');
+                location = "users.html";
+            }).catch(err => {
+                const loginError = document.getElementById("loginError");
+                loginError.innerText = err.message;
+            });
         }).catch(err => {
             // console.log(err.message);
             const signupError = document.getElementById('signupError');
             signupError.innerText = err.message;
-        })
+        });
     }).catch(err => {
         // console.log(err.message);
         const signupError2 = document.getElementById('signupError');
         signupError2.innerText = err.message;
-    })
+    });
 })
 

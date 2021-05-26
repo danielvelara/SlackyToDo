@@ -10,5 +10,23 @@ loginForm.addEventListener('submit', e => {
     }).catch(err => {
         const loginError = document.getElementById("loginError");
         loginError.innerText = err.message;
-    })
-})
+    });
+});
+
+
+const resetForm = document.getElementById('reset-form');
+resetForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const emailAddress = resetForm['reset_email'].value;
+    // console.log(loginEmail, loginPassword);
+    auth.sendPasswordResetEmail(emailAddress).then(function() {
+    // Email sent.
+    }).catch(function(error) {
+    // An error happened.
+        console.log(error);
+    });
+});
+
+
+
+  

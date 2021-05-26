@@ -2,48 +2,75 @@ const spanDate = document.getElementById("date");
 const spanMonth = document.getElementById("month");
 const spanYear = document.getElementById("year");
 const spanWeekday = document.getElementById("weekday");
-
+const username = document.getElementById('username');
 const todoContainer = document.getElementById('todo-container');
 
-function loadbody() {
-    // console.log('body is loaded');
-    const date = new Date();
-    const month = date.toLocaleString('default', { month: 'long' });
-    const myDate = date.getDate();
-    const year = date.getFullYear();
-    const day = date.toLocaleDateString('default', { weekday: 'long' });
+const date = new Date();
+const month = date.toLocaleString('default', { month: 'long' });
+const myDate = date.getDate();
+const year = date.getFullYear();
+const day = date.toLocaleDateString('default', { weekday: 'long' });
 
-    spanDate.innerText = myDate;
-    spanMonth.innerText = month;
-    spanYear.innerText = year;
-    spanWeekday.innerText = day;
+spanDate.innerText = myDate;
+spanMonth.innerText = month;
+spanYear.innerText = year;
+spanWeekday.innerText = day;
 
-}
+let storedUser;
 
 // checking if user is signed in or not
 auth.onAuthStateChanged(user => {
+    storedUser = user;
     if (user) {
-        console.log('user is signed in at users.html');
+        fs.collection('users').doc(storedUser.uid).get().then((snapshot) => {
+            // console.log(snapshot.data().Name);
+            username.innerText = snapshot.data().Name;
+        })
+
+        fs.collection(storedUser.uid).onSnapshot((snapshot) => {
+            let changes = snapshot.docChanges();
+
+            let rows = [];
+
+            changes.forEach(change => {
+                if (change.type == "added") {
+                    rows.push(change.doc.data());
+                }
+                else if (change.type == 'removed') {
+                    let li = todoContainer.querySelector('[data-id=' + change.doc.id + ']');
+                    todoContainer.removeChild(li);
+                }
+            });
+            renderRows(rows);
+        });
     }
     else {
+        console.log(user);
         alert('your login session has expired or you have logged out, login again to continue');
         location = "login.html";
     }
+
+    
 })
 
 // retriving todos
-function renderData(individualDoc) {
+function renderData(row) {
 
     // parent div
-    let parentDiv = document.createElement("div");
-    parentDiv.className = "container todo-box";
-    parentDiv.setAttribute('data-id', individualDoc.id);
+    let parentTr = document.createElement("tr");
+    parentTr.className = "container todo-box";
+    parentTr.setAttribute('data-id', row.id);
 
     // todo div
-    let todoDiv = document.createElement("div");
-    todoDiv.textContent = individualDoc.data().todos;
+    let todoTd = document.createElement("td");
+    todoTd.textContent = row.todos;
+    todoTd.setAttribute("class", "row-data");
 
     // button
+
+    let trashTd = document.createElement("td");
+    let editTd = document.createElement("td");
+
     let trash = document.createElement("button");
     let edit = document.createElement("button");
 
@@ -53,95 +80,73 @@ function renderData(individualDoc) {
     let e = document.createElement("e");
     e.className = "fas fa-edit";
 
+    let hourTd = document.createElement("td");
+    if(row.hour){
+        hourTd.textContent = row.hour;
+    }
+
+    let descTd = document.createElement("td");
+    if(row.desc){
+        descTd.textContent = row.desc;
+        descTd.setAttribute("class", "row-data");
+    }
     // appending
     trash.appendChild(i);
+    trashTd.appendChild(trash);
     edit.appendChild(e);
+    editTd.appendChild(edit);
 
-    parentDiv.appendChild(todoDiv);
-    parentDiv.appendChild(edit);
-    parentDiv.appendChild(trash);
-
-   
-    
-
-    // todoContainer.innerHTML += `
-    //     <div class="container todo-box" id ="${individualDoc.doc.id}">
-    //       <div>${individualDoc.doc.data().todos}</div>
-    //       <button onClick="deleteTodo('${individualDoc.doc.id}','${user.uid}')"><i class='fas fa-trash'></i></button>
-    //     </div>
-    //     `
-    todoContainer.appendChild(parentDiv);
+    parentTr.appendChild(todoTd);
+    parentTr.appendChild(descTd);
+    parentTr.appendChild(hourTd);
+    parentTr.appendChild(editTd);
+    parentTr.appendChild(trashTd);
+    todoContainer.appendChild(parentTr);
     
 
     // trash clicking event
     trash.addEventListener('click', e => {
         let id = e.target.parentElement.parentElement.getAttribute('data-id');
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                fs.collection(user.uid).doc(id).delete();
-            }
-        })
+        if (storedUser) {
+            fs.collection(storedUser.uid).doc(id).delete();
+        }
     })
 
     edit.addEventListener('click', e => {
-        var person = prompt("Edit task: ");
-        //console.log(person);
         let id = e.target.parentElement.parentElement.getAttribute('data-id');
-        auth.onAuthStateChanged(user => {
-            if (user) {
-               // var editValue = prompt('editar la tarea seleccionada', e.firstChild.nodeValue);
-                //e.firstChild.nodeValue = editValue;
-                fs.collection(user.uid).doc(id).update({             
-                    todos: person
-                })
-                location.reload();
-            }
-        })
+        var newName = prompt("Edit task: ");
+        if (storedUser) {
+            fs.collection(storedUser.uid).doc(id).update({
+                todos: newName
+            })
+            location.reload();
+        }
     })
 }
 
-
-
-// retriving username
-auth.onAuthStateChanged(user => {
-    const username = document.getElementById('username');
-    if (user) {
-        fs.collection('users').doc(user.uid).get().then((snapshot) => {
-            // console.log(snapshot.data().Name);
-            username.innerText = snapshot.data().Name;
-        })
-    }
-    else {
-        // console.log('user is not signed in to retrive username');
-    }
-})
-
 // adding todos to firestore database
 const form = document.getElementById('form');
-let date = new Date();
-let time = date.getTime();
-let counter = time;
+
 form.addEventListener('submit', e => {
     e.preventDefault();
     const todos = form['todos'].value;
-    // console.log(todos);
-    let id = counter += 1;
+    const hour = form['hour'].value;
+    const desc = form['desc'].value;
+    let id = date.getTime() + 1;
     form.reset();
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            fs.collection(user.uid).doc('_' + id).set({
-                id: '_' + id,
-                todos
-            }).then(() => {
-                console.log('todo added');
-            }).catch(err => {
-                console.log(err.message);
-            })
-        }
-        else {
-            // console.log('user is not signed in to add todos');
-        }
-    })
+    if (storedUser) {
+        fs.collection(storedUser.uid).doc('_' + id).set({
+            id: '_' + id,
+            todos,
+            hour,
+            desc
+        }).then(() => {
+            console.log('todo added');
+            location.reload();
+        }).catch(err => {
+            console.log(err.message);
+        });
+    }
 })
 
 // logout
@@ -149,20 +154,18 @@ function logout() {
     auth.signOut();
 }
 
-// realtime listners
-auth.onAuthStateChanged(user => {
-    if (user) {
-        fs.collection(user.uid).onSnapshot((snapshot) => {
-            let changes = snapshot.docChanges();
-            changes.forEach(change => {
-                if (change.type == "added") {
-                    renderData(change.doc);
-                }
-                else if (change.type == 'removed') {
-                    let li = todoContainer.querySelector('[data-id=' + change.doc.id + ']');
-                    todoContainer.removeChild(li);
-                }
-            })
-        })
-    }
-})
+function compare(a,b) {
+    var time1 = parseFloat(a.hour.replace(':','.').replace(/[^\d.-]/g, ''));
+    var time2 = parseFloat(b.hour.replace(':','.').replace(/[^\d.-]/g, ''));
+    if(a.hour.match(/.*pm/)) time1 += 12; if(b.hour.match(/.*pm/)) time2 += 12;
+    if (time1 < time2) return -1;
+    if (time1 > time2) return 1;
+    return 0;
+}   
+
+function renderRows(rows){
+    rows.sort(compare);
+    rows.forEach(row => {
+        renderData(row);
+    });
+}

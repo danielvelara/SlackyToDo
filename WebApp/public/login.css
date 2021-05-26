@@ -24,6 +24,10 @@ label {
     color: #fff !important;
 }
 
+.reset_label{
+    color: black !important;
+}
+
 .error {
     color: yellow;
     font-size: 14px;

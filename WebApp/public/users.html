@@ -18,7 +18,7 @@
         href="https://fonts.googleapis.com/css?family=Tangerine|Lato|Gamja+Flower|Open+Sans|Roboto+Slab|Indie+Flower|Lobster|Open+Sans|Kosugi+Maru">
 </head>
 
-<body onload="loadbody();">
+<body>
     <!-- date and time section -->
     <div class="my-container">
         <h3>Welcome, <span id="username"></span></h3>
@@ -35,14 +35,29 @@
     <!-- todo-form -->
     <div class="container">
         <form autocomplete="off" class="form-group" id="form">
+            <label for="todos"> Name:</label>
             <input type="text" class="form-control" id="todos" required><br>
+            <label for="desc"> Description:</label>
+            <input type="text" class="form-control" id="desc" required><br>
+            <label for="hour"> Hour:</label>
+            <input type="time" class="form-control" id="hour" required><br>
             <button type="submit" class="btn btn-success btn-block">ADD</button>
         </form>
     </div><br>
 
     <!-- todos container -->
-    <div class="container todo-container" id="todo-container">
-
+    <div class="container">
+        <table style="width:100%">
+            <tbody id="todo-container">
+                <tr class="container todo-box">
+                    <th style="width:21%">Name:</th>
+                    <th>Description:</th>
+                    <th style="width:4%">Hour:</th>
+                    <th style="width:4%">Edit</th>
+                    <th style="width:4%">Delete</th>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->

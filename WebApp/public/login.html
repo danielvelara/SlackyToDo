@@ -17,7 +17,7 @@
         href="https://fonts.googleapis.com/css?family=Tangerine|Lato|Gamja+Flower|Open+Sans|Roboto+Slab|Indie+Flower|Lobster|Open+Sans|Kosugi+Maru">
 </head>
 
-<body>
+<body  onload="loadbody()">
     <div class=" container login-box">
         <h3>LOGIN</h3>
         <hr>
@@ -26,11 +26,48 @@
             <input type="email" id="login-email" class="form-control" required><br>
             <label for="">Password</label><br>
             <input type="password" id="login-password" class="form-control" required><br>
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal2">
+                <a>Forgot your password?</a>
+            </button><br>
             <button type="submit" class="btn btn-success btn-block">LOGIN</button>
             <br>
             <div class="container error" id="loginError"></div>
         </form>
     </div>
+
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Request password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off" class="form-group" id="reset-form">
+                        <label for=""  class="reset_label" style="color:black">Email:</label>
+                        <input type="email" class="form-control" id="reset_email" required><br>
+                        <button type="submit" class="btn btn-primary">Request new password</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+        </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+        </script>
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
