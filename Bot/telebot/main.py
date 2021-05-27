@@ -6,7 +6,7 @@ import Constants as keys
 from telegram.ext import *
 updater = Updater(keys.API_KEY, use_context=True)
 
-cred = credentials.Certificate("todo-6d55c-firebase-adminsdk-kexwx-ec360c7bc0.json")
+cred = credentials.Certificate("/home/danielvelara/Videos/SlackyToDo/Bot/telebot/todo-6d55c-firebase-adminsdk-kexwx-8a0d5a7267.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -120,10 +120,10 @@ def responses(input,username):
 print("Bot started ...")
 
 def start_command(update,context):
-    update.message.reply_text("Type something")
+    update.message.reply_text("Bienvenido a SlackyToDo 📕\nCon este cliente vas a poder ver, agregar, eliminar y modificar tus TODO's")
 
 def help_command(update,context):
-    update.message.reply_text("Help Message")
+    update.message.reply_text("Comandos:\nMostrar TODO's → todos,todo,t show\nAgregar → a, add, agregar\nEliminar → e, d, delete\nModificar → m, mod, modify, modificar")
 
 def handle_message(update, context):
     text = str(update.message.text)
